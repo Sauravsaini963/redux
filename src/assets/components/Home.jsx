@@ -6,6 +6,7 @@ import UpdatePost from './updatePost';
 
 const Home = () => {
   const [formData, setFormData] = useState({firstName:"", email:""})
+  const [editData, setEditData] = useState({});
   const [open, setOpen] = React.useState(false);
 
   const handleChange = (e) => {
@@ -41,6 +42,11 @@ const navigate = useNavigate();
       dispatch(deletePost(id));
     }
 
+    const handleEdit = (item) =>{
+      setOpen(true);
+      setEditData(item);
+    }
+
     console.log("allPostsallPosts ", allPosts);
   return (
     <div>Home
@@ -62,7 +68,7 @@ const navigate = useNavigate();
          <tr key={index}>
           <td>{item.firstName}</td>
           <td>{item.email}</td>
-          <button onClick={()=>setOpen(true)}>edit</button>
+          <button onClick={()=>{handleEdit(item)}}>edit</button>
           <button onClick={()=>handleDelete(item?._id)}>delete</button>
          </tr>
          </tbody>
@@ -70,7 +76,7 @@ const navigate = useNavigate();
       })}
       </table>
 
-      <UpdatePost open={open} setOpen={setOpen}/>
+      <UpdatePost open={open} setOpen={setOpen} editData={editData} />
     </div>
   )
 }

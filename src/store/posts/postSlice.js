@@ -1,8 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import http from "../../services/common-http";
 export const getAllPosts = createAsyncThunk("posts/getAllPosts", async () => {
   try {
-    const response = await axios.get(`http://localhost:8080/users/getData`);
+    const response = await http.get(`/users/getData`);
     if (response) {
       console.log("response ", response);
       return response.data;
@@ -46,9 +47,16 @@ export const deletePost = createAsyncThunk("post/deletePost", async (id, {dispat
   } catch (error) {}
 });
 
-export const updatePost = createAsyncThunk("post/updatePost", async (id, {dispatch}) => {
+export const  updatePost = createAsyncThunk("post/updatePost", async ({data,id}, {dispatch}) => {
+ console.log("data, iddata, id8888888888888888888888 ", data, id)
+
+
   try {
-    const response = await axios.put(`http://localhost:8080/users//editData/` + id);
+    const response = await axios.put(`http://localhost:8080/users//updateData/` + id, {
+      name: data?.firstName,
+      email: data?.email
+    });
+    console.log("000000000000000000 ", response);
     if (response) {
       dispatch(getAllPosts())
       return response.data;

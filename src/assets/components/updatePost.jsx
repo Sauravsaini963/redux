@@ -1,19 +1,29 @@
-import * as React from 'react';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTheme } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
+import React, { useEffect, useState } from "react";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTheme } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import { useDispatch } from "react-redux";
+import { updatePost } from "../../store/posts/postSlice";
 
-const UpdatePost = ({open , setOpen}) => {
+const UpdatePost = ({ open, setOpen, editData }) => {
+  console.log("edite     sasa", editData);
+  const [updateData, setUpdateData] = useState({ firstName: "", email: "" });
   const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+  const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
+  useEffect(() => {
+    setUpdateData({
+      firstName: editData?.firstName,
+      email: editData?.email,
+    });
+  }, [editData]);
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -21,52 +31,73 @@ const UpdatePost = ({open , setOpen}) => {
   const handleClose = () => {
     setOpen(false);
   };
+  const dispatch = useDispatch();
 
+  console.log("updateDataupdateDataupdateData ", updateData);
+  const handleSubmitForm = (e) => {
+    e.preventDefault();
+    console.log("000000000000000 ", editData?._id);
+    dispatch(updatePost({data:updateData, id:editData?._id}));
+    console.log("eeeeeeeeeeeeeeeeeeeeeee ", e)
+    handleClose();
+    setUpdateData({
+      firstName:"",
+      email:""
+     })
+  };
   return (
-    <React.Fragment>
-      
+   
       <Dialog
         fullScreen={fullScreen}
         open={open}
         onClose={handleClose}
         aria-labelledby="responsive-dialog-title"
-      >
- <Box
-      component="form"
-      sx={{
-        '& .MuiTextField-root': { m: 1, width: '25ch' },
-      }}
-      noValidate
-      autoComplete="off"
-    >
-      <div>
-        <h1>update Form</h1>
-        <TextField
-          id="outlined-multiline-flexible"
-          label="FirstName"
-          multiline
-          maxRows={4}
-        />
-        <TextField
-          id="outlined-textarea"
-          label="email"
-          placeholder="Placeholder"
-          multiline
-        /><br/>
-        <Button variant="contained"  sx={{ marginTop: '30px', marginLeft:'40%', marginBottom:'50px' }} color="success">
-         update
-        </Button>
-      </div>
-      <div>
-    
-    
-     
-      </div>
-    </Box>
-
+     >
+          <div>
+            <h1>update Form</h1>
+            <TextField
+              id="outlined-multiline-flexible"
+              // label="FirstName"
+              multiline
+              maxRows={4}
+              value={updateData?.firstName}
+              onChange={(e) =>
+                setUpdateData((prev) => ({
+                  ...prev,
+                  firstName: e.target.value,
+                }))
+              }
+            />
+            <TextField
+              id="outlined-textarea"
+              // label="email"
+              placeholder="Placeholder"
+              multiline
+              value={updateData?.email}
+              onChange={(e) =>
+                setUpdateData((prev) => ({ ...prev, email: e.target.value }))
+              }
+            />
+            <br />
+            <Button
+              variant="contained"
+              sx={{
+                marginTop: "30px",
+                marginLeft: "40%",
+                marginBottom: "50px",
+              }}
+              color="success"
+              onClick={handleSubmitForm}
+            >
+              update
+            </Button>
+           
+          </div>
+          <div></div>
+   
       </Dialog>
-    </React.Fragment>
+   
   );
-}
+};
 
-export default UpdatePost
+export default UpdatePost;
